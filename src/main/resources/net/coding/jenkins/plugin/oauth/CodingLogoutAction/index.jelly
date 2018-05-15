@@ -28,13 +28,13 @@
     <l:main-panel>
       <j:choose>
         <j:when test="${h.isAnonymous()}">
-          <p>You are now logged out of Jenkins.  However, you have not been logged out of <a href="${it.gitHubURL}">${it.gitHubText}</a>.</p>
-          <p>Have a nice day!</p>
+          <p>${%coding.oauth.logoutSucceed}<a href="${it.gitHubURL}">${it.gitHubText}</a>.</p>
+          <p>${%coding.oauth.niceDay}</p>
         </j:when>
         <j:otherwise>
-          <h2>Whoa there...</h2>
-          <p>You are not logged out - don't run away!</p>
-          <p>Whilst you should have been logged out, you are not actually logged out.  Press the logout button to try logging out again.</p>
+          <h2>${%coding.oauth.whoaThere}</h2>
+          <p>${%coding.oauth.notLogoutYet}</p>
+          <p>${%coding.oauth.pressLogoutAgain}</p>
         </j:otherwise>
       </j:choose>
     </l:main-panel>
