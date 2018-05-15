@@ -611,7 +611,7 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
 
         @Override
         public String getHelpFile() {
-            return "/plugin/github-oauth/help/help-security-realm.html";
+            return "/plugin/coding-webhook/help/oauth/help-security-realm.html";
         }
 
         @Override

@@ -248,7 +248,7 @@ public class CodingAuthorizationStrategy extends AuthorizationStrategy {
         }
 
         public String getHelpFile() {
-            return "/plugin/github-oauth/help/help-authorization-strategy.html";
+            return "/plugin/coding-webhook/help/oauth/help-authorization-strategy.html";
         }
     }
 }

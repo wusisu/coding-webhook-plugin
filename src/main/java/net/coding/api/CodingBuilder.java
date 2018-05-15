@@ -45,7 +45,7 @@ public class CodingBuilder {
 
     public static CodingBuilder fromProperties(Properties props) {
         CodingBuilder self = new CodingBuilder();
-        self.withOAuthToken(props.getProperty("oauth"), props.getProperty("login"));
+        self.withOAuthToken(props.getProperty("net/coding/jenkins/plugin/oauth"), props.getProperty("login"));
         self.withPassword(props.getProperty("login"), props.getProperty("password"));
         self.withEndpoint(props.getProperty("endpoint", Coding.CODING_URL));
         return self;
