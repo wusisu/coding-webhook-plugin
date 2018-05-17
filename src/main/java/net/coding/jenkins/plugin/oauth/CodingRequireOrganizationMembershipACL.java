@@ -83,7 +83,7 @@ public class CodingRequireOrganizationMembershipACL extends ACL {
     private final boolean authenticatedUserReadPermission;
     private final boolean useRepositoryPermissions;
     private final boolean authenticatedUserCreateJobPermission;
-    private final boolean allowGithubWebHookPermission;
+    private final boolean allowCodingWebHookPermission;
     private final boolean allowCcTrayPermission;
     private final boolean allowAnonymousReadPermission;
     private final boolean allowAnonymousJobStatusPermission;
@@ -186,10 +186,10 @@ public class CodingRequireOrganizationMembershipACL extends ACL {
                     if (allowAnonymousReadPermission) {
                         return true;
                     }
-                    if (allowGithubWebHookPermission &&
-                            (currentUriPathEquals("github-webhook") ||
-                             currentUriPathEquals("github-webhook/"))) {
-                        log.finest("Granting READ access for github-webhook url: " + requestURI());
+                    if (allowCodingWebHookPermission &&
+                            (currentUriPathEquals("coding") ||
+                             currentUriPathEquals("coding/"))) {
+                        log.finest("Granting READ access for coding-webhook url: " + requestURI());
                         return true;
                     }
                     if (allowCcTrayPermission && currentUriPathEndsWithSegment("cc.xml")) {
@@ -334,7 +334,7 @@ public class CodingRequireOrganizationMembershipACL extends ACL {
                                                   boolean authenticatedUserReadPermission,
                                                   boolean useRepositoryPermissions,
                                                   boolean authenticatedUserCreateJobPermission,
-                                                  boolean allowGithubWebHookPermission,
+                                                  boolean allowCodingWebHookPermission,
                                                   boolean allowCcTrayPermission,
                                                   boolean allowAnonymousReadPermission,
                                                   boolean allowAnonymousJobStatusPermission) {
@@ -343,7 +343,7 @@ public class CodingRequireOrganizationMembershipACL extends ACL {
         this.authenticatedUserReadPermission      = authenticatedUserReadPermission;
         this.useRepositoryPermissions             = useRepositoryPermissions;
         this.authenticatedUserCreateJobPermission = authenticatedUserCreateJobPermission;
-        this.allowGithubWebHookPermission         = allowGithubWebHookPermission;
+        this.allowCodingWebHookPermission = allowCodingWebHookPermission;
         this.allowCcTrayPermission                = allowCcTrayPermission;
         this.allowAnonymousReadPermission         = allowAnonymousReadPermission;
         this.allowAnonymousJobStatusPermission    = allowAnonymousJobStatusPermission;
@@ -373,7 +373,7 @@ public class CodingRequireOrganizationMembershipACL extends ACL {
           this.authenticatedUserReadPermission,
           this.useRepositoryPermissions,
           this.authenticatedUserCreateJobPermission,
-          this.allowGithubWebHookPermission,
+          this.allowCodingWebHookPermission,
           this.allowCcTrayPermission,
           this.allowAnonymousReadPermission,
           this.allowAnonymousJobStatusPermission,
@@ -385,7 +385,7 @@ public class CodingRequireOrganizationMembershipACL extends ACL {
                                                   boolean authenticatedUserReadPermission,
                                                   boolean useRepositoryPermissions,
                                                   boolean authenticatedUserCreateJobPermission,
-                                                  boolean allowGithubWebHookPermission,
+                                                  boolean allowCodingWebHookPermission,
                                                   boolean allowCcTrayPermission,
                                                   boolean allowAnonymousReadPermission,
                                                   boolean allowAnonymousJobStatusPermission,
@@ -397,7 +397,7 @@ public class CodingRequireOrganizationMembershipACL extends ACL {
         this.authenticatedUserReadPermission      = authenticatedUserReadPermission;
         this.useRepositoryPermissions             = useRepositoryPermissions;
         this.authenticatedUserCreateJobPermission = authenticatedUserCreateJobPermission;
-        this.allowGithubWebHookPermission         = allowGithubWebHookPermission;
+        this.allowCodingWebHookPermission = allowCodingWebHookPermission;
         this.allowCcTrayPermission                = allowCcTrayPermission;
         this.allowAnonymousReadPermission         = allowAnonymousReadPermission;
         this.allowAnonymousJobStatusPermission    = allowAnonymousJobStatusPermission;
@@ -424,8 +424,8 @@ public class CodingRequireOrganizationMembershipACL extends ACL {
         return authenticatedUserReadPermission;
     }
 
-    public boolean isAllowGithubWebHookPermission() {
-        return allowGithubWebHookPermission;
+    public boolean isAllowCodingWebHookPermission() {
+        return allowCodingWebHookPermission;
     }
 
     public boolean isAllowCcTrayPermission() {

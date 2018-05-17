@@ -30,7 +30,7 @@ import java.util.Collection;
 public abstract class CodingOAuthScope implements ExtensionPoint {
     /**
      * Returns a collection of scopes to request.
-     * See http://developer.github.com/v3/oauth/ for valid scopes
+     * See https://open.coding.net/references/personal-access-token/#%E8%AE%BF%E9%97%AE%E4%BB%A4%E7%89%8C%E7%9A%84%E6%9D%83%E9%99%90
      */
     public abstract Collection<String> getScopesToRequest();
 }

@@ -121,7 +121,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * Implementation of the AbstractPasswordBasedSecurityRealm that uses github
+ * Implementation of the AbstractPasswordBasedSecurityRealm that uses coding
  * oauth to verify the user can login.
  *
  * This is based on the MySQLSecurityRealm from the mysql-auth-plugin written by
@@ -133,32 +133,32 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
     private static final String DEFAULT_ENTERPRISE_API_SUFFIX = "/api";
     private static final String DEFAULT_OAUTH_SCOPES = "user,user:email,team";
 
-    private String githubWebUri;
-    private String githubApiUri;
+    private String codingWebUri;
+    private String codingApiUri;
     private String clientID;
     private Secret clientSecret;
     private String oauthScopes;
     private String[] myScopes;
 
     /**
-     * @param githubWebUri The URI to the root of the web UI for GitHub or GitHub Enterprise,
+     * @param codingWebUri The URI to the root of the web UI for Coding or Coding Enterprise,
      *                     including the protocol (e.g. https).
-     * @param githubApiUri The URI to the root of the API for GitHub or GitHub Enterprise,
+     * @param codingApiUri The URI to the root of the API for Coding or Coding Enterprise,
      *                     including the protocol (e.g. https).
      * @param clientID The client ID for the created OAuth Application.
-     * @param clientSecret The client secret for the created GitHub OAuth Application.
+     * @param clientSecret The client secret for the created Coding OAuth Application.
      * @param oauthScopes A comma separated list of OAuth Scopes to request access to.
      */
     @DataBoundConstructor
-    public CodingSecurityRealm(String githubWebUri,
-                               String githubApiUri,
+    public CodingSecurityRealm(String codingWebUri,
+                               String codingApiUri,
                                String clientID,
                                String clientSecret,
                                String oauthScopes) {
         super();
 
-        this.githubWebUri = CodingUtil.fixEndwithSlash(Util.fixEmptyAndTrim(githubWebUri));
-        this.githubApiUri = CodingUtil.fixEndwithSlash(Util.fixEmptyAndTrim(githubApiUri));
+        this.codingWebUri = CodingUtil.fixEndwithSlash(Util.fixEmptyAndTrim(codingWebUri));
+        this.codingApiUri = CodingUtil.fixEndwithSlash(Util.fixEmptyAndTrim(codingApiUri));
         this.clientID     = Util.fixEmptyAndTrim(clientID);
         setClientSecret(Util.fixEmptyAndTrim(clientSecret));
         this.oauthScopes  = Util.fixEmptyAndTrim(oauthScopes);
@@ -167,27 +167,27 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
     private CodingSecurityRealm() {    }
 
     /**
-     * Tries to automatically determine the GitHub API URI based on
-     * a GitHub Web URI.
+     * Tries to automatically determine the Coding API URI based on
+     * a Coding Web URI.
      *
-     * @param githubWebUri The URI to the root of the Web UI for GitHub or GitHub Enterprise.
+     * @param codingWebUri The URI to the root of the Web UI for Coding or Coding Enterprise.
      * @return The expected API URI for the given Web UI
      */
-    private String determineApiUri(String githubWebUri) {
-        if(githubWebUri.equals(DEFAULT_WEB_URI)) {
+    private String determineApiUri(String codingWebUri) {
+        if(codingWebUri.equals(DEFAULT_WEB_URI)) {
             return DEFAULT_API_URI;
         } else {
-            return githubWebUri + DEFAULT_ENTERPRISE_API_SUFFIX;
+            return codingWebUri + DEFAULT_ENTERPRISE_API_SUFFIX;
         }
     }
 
     /**
-     * @param githubWebUri
+     * @param codingWebUri
      *            the string representation of the URI to the root of the Web UI for
-     *            GitHub or GitHub Enterprise.
+     *            Coding or Coding Enterprise.
      */
-    private void setGithubWebUri(String githubWebUri) {
-        this.githubWebUri = githubWebUri;
+    private void setCodingWebUri(String codingWebUri) {
+        this.codingWebUri = codingWebUri;
     }
 
     /**
@@ -212,7 +212,7 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
     }
 
     /**
-     * Checks the security realm for a GitHub OAuth scope.
+     * Checks the security realm for a Coding OAuth scope.
      * @param scope A scope to check for in the security realm.
      * @return true if security realm has the scope or false if it does not.
      */
@@ -226,17 +226,17 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
 
     /**
      *
-     * @return the URI to the API root of GitHub or GitHub Enterprise.
+     * @return the URI to the API root of Coding or Coding Enterprise.
      */
-    public String getGithubApiUri() {
-        return githubApiUri;
+    public String getCodingApiUri() {
+        return codingApiUri;
     }
 
     /**
-     * @param githubApiUri the URI to the API root of GitHub or GitHub Enterprise.
+     * @param codingApiUri the URI to the API root of Coding or Coding Enterprise.
      */
-    private void setGithubApiUri(String githubApiUri) {
-        this.githubApiUri = githubApiUri;
+    private void setCodingApiUri(String codingApiUri) {
+        this.codingApiUri = codingApiUri;
     }
 
     public static final class ConverterImpl implements Converter {
@@ -249,12 +249,12 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
                 MarshallingContext context) {
             CodingSecurityRealm realm = (CodingSecurityRealm) source;
 
-            writer.startNode("githubWebUri");
-            writer.setValue(realm.getGithubWebUri());
+            writer.startNode("codingWebUri");
+            writer.setValue(realm.getCodingWebUri());
             writer.endNode();
 
-            writer.startNode("githubApiUri");
-            writer.setValue(realm.getGithubApiUri());
+            writer.startNode("codingApiUri");
+            writer.setValue(realm.getCodingApiUri());
             writer.endNode();
 
             writer.startNode("clientID");
@@ -287,12 +287,12 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
                 reader.moveUp();
             }
 
-            if (realm.getGithubWebUri() == null) {
-                realm.setGithubWebUri(DEFAULT_WEB_URI);
+            if (realm.getCodingWebUri() == null) {
+                realm.setCodingWebUri(DEFAULT_WEB_URI);
             }
 
-            if (realm.getGithubApiUri() == null) {
-                realm.setGithubApiUri(DEFAULT_API_URI);
+            if (realm.getCodingApiUri() == null) {
+                realm.setCodingApiUri(DEFAULT_API_URI);
             }
 
             return realm;
@@ -304,14 +304,14 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
                 realm.setClientID(value);
             } else if (node.toLowerCase().equals("clientsecret")) {
                 realm.setClientSecret(value);
-            } else if (node.toLowerCase().equals("githubweburi")) {
-                realm.setGithubWebUri(value);
-//            } else if (node.toLowerCase().equals("githuburi")) { // backwards compatibility for old field
-//                realm.setGithubWebUri(value);
+            } else if (node.toLowerCase().equals("codingweburi")) {
+                realm.setCodingWebUri(value);
+//            } else if (node.toLowerCase().equals("codinguri")) { // backwards compatibility for old field
+//                realm.setCodingWebUri(value);
 //                String apiUrl = realm.determineApiUri(value);
-//                realm.setGithubApiUri(apiUrl);
-            } else if (node.toLowerCase().equals("githubapiuri")) {
-                realm.setGithubApiUri(value);
+//                realm.setCodingApiUri(apiUrl);
+            } else if (node.toLowerCase().equals("codingapiuri")) {
+                realm.setCodingApiUri(value);
             } else if (node.toLowerCase().equals("oauthscopes")) {
                 realm.setOauthScopes(value);
             } else {
@@ -322,10 +322,10 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
     }
 
     /**
-     * @return the uri to the web root of Github (varies for Github Enterprise Edition)
+     * @return the uri to the web root of Coding (varies for Coding Enterprise Edition)
      */
-    public String getGithubWebUri() {
-        return githubWebUri;
+    public String getCodingWebUri() {
+        return codingWebUri;
     }
 
     /**
@@ -367,12 +367,12 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
             suffix += "&scope="+ Util.join(scopes,",");
         } else {
             // We need repo scope in order to access private repos
-            // See https://developer.github.com/v3/oauth/#scopes
+            // see https://open.coding.net/references/personal-access-token/#%E8%AE%BF%E9%97%AE%E4%BB%A4%E7%89%8C%E7%9A%84%E6%9D%83%E9%99%90
             suffix += "&scope=" + oauthScopes;
         }
 
         //redirect_uri=https%3A%2F%2Fcoding.coding.me%2FComments%2F
-        return new HttpRedirect(githubWebUri + "/oauth_authorize.html?client_id="
+        return new HttpRedirect(codingWebUri + "/oauth_authorize.html?client_id="
                 + clientID + suffix);
     }
 
@@ -397,7 +397,7 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
 
         if (accessToken != null && accessToken.trim().length() > 0) {
             // only set the access token if it exists.
-            CodingAuthenticationToken auth = new CodingAuthenticationToken(accessToken, getGithubApiUri());
+            CodingAuthenticationToken auth = new CodingAuthenticationToken(accessToken, getCodingApiUri());
             SecurityContextHolder.getContext().setAuthentication(auth);
 
             CodingMyself self = auth.getMyself();
@@ -409,7 +409,7 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
             CodingSecretStorage.put(u, accessToken);
 
             u.setFullName(self.getName());
-            // Set email from github only if empty
+            // Set email from coding only if empty
             if (!u.getProperty(Mailer.UserProperty.class).hasExplicitlyConfiguredAddress()) {
                 if(hasScope("user") || hasScope("user:email")) {
                     String primary_email = null;
@@ -422,7 +422,7 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
                         u.addProperty(new Mailer.UserProperty(primary_email));
                     }
                 } else {
-                    u.addProperty(new Mailer.UserProperty(auth.getGitHub().getMyself().getEmail()));
+                    u.addProperty(new Mailer.UserProperty(auth.getCoding().getMyself().getEmail()));
                 }
             }
 
@@ -447,7 +447,7 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
         String content;
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             // https://coding.net/api
-            HttpPost httpost = new HttpPost(githubWebUri + "/api/oauth/access_token?");
+            HttpPost httpost = new HttpPost(codingWebUri + "/api/oauth/access_token?");
             ArrayList<NameValuePair> entityList = new ArrayList<>(3);
             entityList.add(new BasicNameValuePair("client_id", clientID));
             entityList.add(new BasicNameValuePair("client_secret", clientSecret.getPlainText()));
@@ -513,17 +513,17 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
                 if (authentication instanceof UsernamePasswordAuthenticationToken)
                     try {
                         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication;
-                        CodingAuthenticationToken github = new CodingAuthenticationToken(token.getCredentials().toString(), getGithubApiUri());
-                        SecurityContextHolder.getContext().setAuthentication(github);
+                        CodingAuthenticationToken coding = new CodingAuthenticationToken(token.getCredentials().toString(), getCodingApiUri());
+                        SecurityContextHolder.getContext().setAuthentication(coding);
 
                         User user = User.getById(token.getName(), false);
                         if(user != null){
                             CodingSecretStorage.put(user, token.getCredentials().toString());
                         }
 
-                        SecurityListener.fireAuthenticated(new CodingOAuthUserDetails(token.getName(), github.getAuthorities()));
+                        SecurityListener.fireAuthenticated(new CodingOAuthUserDetails(token.getName(), coding.getAuthorities()));
 
-                        return github;
+                        return coding;
                     } catch (IOException e) {
                             throw new RuntimeException(e);
                     }
@@ -541,24 +541,24 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
     @Override
     protected CodingOAuthUserDetails authenticate(String username, String password) throws AuthenticationException {
         try {
-            CodingAuthenticationToken github = new CodingAuthenticationToken(password, getGithubApiUri());
-            if(username.equals(github.getPrincipal())) {
-                SecurityContextHolder.getContext().setAuthentication(github);
-                return github.getUserDetails(username);
+            CodingAuthenticationToken coding = new CodingAuthenticationToken(password, getCodingApiUri());
+            if(username.equals(coding.getPrincipal())) {
+                SecurityContextHolder.getContext().setAuthentication(coding);
+                return coding.getUserDetails(username);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        throw new BadCredentialsException("Invalid GitHub username or personal access token: " + username);
+        throw new BadCredentialsException("Invalid Coding username or personal access token: " + username);
     }
 
     @Override
     public CliAuthenticator createCliAuthenticator(final CLICommand command) {
         return new CliAuthenticator() {
-            @Option(name="--username",usage="GitHub username to authenticate yourself to Jenkins.")
+            @Option(name="--username",usage="Coding username to authenticate yourself to Jenkins.")
             public String userName;
 
-            @Option(name="--password",usage="GitHub personal access token. Note that passing a password in arguments is insecure.")
+            @Option(name="--password",usage="Coding personal access token. Note that passing a password in arguments is insecure.")
             public String password;
 
             @Option(name="--password-file",usage="File that contains the personal access token.")
@@ -581,10 +581,10 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
                 }
 
                 if(password == null) {
-                    throw new BadCredentialsException("No GitHub personal access token specified.");
+                    throw new BadCredentialsException("No Coding personal access token specified.");
                 }
                 CodingSecurityRealm.this.authenticate(userName, password);
-                return new CodingAuthenticationToken(password, getGithubApiUri());
+                return new CodingAuthenticationToken(password, getCodingApiUri());
             }
         };
     }
@@ -616,14 +616,14 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
 
         @Override
         public String getDisplayName() {
-            return "Github Authentication Plugin";
+            return Messages.coding_oauth_codingAuthenticationPlugin();
         }
 
-        public String getDefaultGithubWebUri() {
+        public String getDefaultCodingWebUri() {
             return DEFAULT_WEB_URI;
         }
 
-        public String getDefaultGithubApiUri() {
+        public String getDefaultCodingApiUri() {
             return DEFAULT_API_URI;
         }
 
@@ -675,9 +675,9 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
             if(localUser != null && CodingSecretStorage.contains(localUser)){
                 String accessToken = CodingSecretStorage.retrieve(localUser);
                 try {
-                    token = new CodingAuthenticationToken(accessToken, getGithubApiUri());
+                    token = new CodingAuthenticationToken(accessToken, getCodingApiUri());
                 } catch (IOException e) {
-                    throw new UserMayOrMayNotExistException("Could not connect to GitHub API server, target URL = " + getGithubApiUri(), e);
+                    throw new UserMayOrMayNotExistException("Could not connect to Coding API server, target URL = " + getCodingApiUri(), e);
                 }
                 SecurityContextHolder.getContext().setAuthentication(token);
             }else{
@@ -694,7 +694,7 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
         }
 
         /**
-         * Always lookup the local user first. If we can't resolve it then we can burn an API request to Github for this user
+         * Always lookup the local user first. If we can't resolve it then we can burn an API request to Coding for this user
          * Taken from hudson.security.HudsonPrivateSecurityRealm#loadUserByUsername(java.lang.String)
          */
         if (localUser != null) {
@@ -727,8 +727,8 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
     public boolean equals(Object object){
         if(object instanceof CodingSecurityRealm) {
             CodingSecurityRealm obj = (CodingSecurityRealm) object;
-            return this.getGithubWebUri().equals(obj.getGithubWebUri()) &&
-                this.getGithubApiUri().equals(obj.getGithubApiUri()) &&
+            return this.getCodingWebUri().equals(obj.getCodingWebUri()) &&
+                this.getCodingApiUri().equals(obj.getCodingApiUri()) &&
                 this.getClientID().equals(obj.getClientID()) &&
                 this.getClientSecret().equals(obj.getClientSecret()) &&
                 this.getOauthScopes().equals(obj.getOauthScopes());
@@ -740,8 +740,8 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(this.getGithubWebUri())
-                .append(this.getGithubApiUri())
+                .append(this.getCodingWebUri())
+                .append(this.getCodingApiUri())
                 .append(this.getClientID())
                 .append(this.getClientSecret())
                 .append(this.getOauthScopes())
@@ -771,14 +771,14 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
                 LOGGER.config(String.format("Lookup for team %s in organization %s", teamName, orgName));
                 CodingTeam ghTeam = authToken.loadTeam(orgName, teamName);
                 if (ghTeam == null) {
-                    throw new UsernameNotFoundException("Unknown GitHub team: " + teamName + " in organization "
+                    throw new UsernameNotFoundException("Unknown Coding team: " + teamName + " in organization "
                             + orgName);
                 }
                 return new CodingOAuthGroupDetails(ghTeam);
             } else { // groupName = "CodingOrganization"
                 CodingOrganization ghOrg = authToken.loadOrganization(groupName);
                 if (ghOrg == null) {
-                    throw new UsernameNotFoundException("Unknown GitHub organization: " + groupName);
+                    throw new UsernameNotFoundException("Unknown Coding organization: " + groupName);
                 }
                 return new CodingOAuthGroupDetails(ghOrg);
             }
@@ -811,7 +811,7 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
             if(console == null) {
                 return null;    // no terminal
             }
-            char[] w = console.readPassword("GitHub Personal Access Token: ");
+            char[] w = console.readPassword("Coding Personal Access Token: ");
             if(w==null) {
                 return null;
             }

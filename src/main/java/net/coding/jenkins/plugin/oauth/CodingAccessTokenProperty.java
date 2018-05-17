@@ -29,7 +29,7 @@ import org.jenkinsci.Symbol;
 import javax.annotation.Nonnull;
 
 /**
- * Remembers the access token used to connect to the Github server
+ * Remembers the access token used to connect to the Coding server
  *
  * @since TODO
  */

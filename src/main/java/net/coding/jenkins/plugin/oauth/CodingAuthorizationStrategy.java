@@ -72,7 +72,7 @@ public class CodingAuthorizationStrategy extends AuthorizationStrategy {
                                        boolean useRepositoryPermissions,
                                        boolean authenticatedUserCreateJobPermission,
                                        String organizationNames,
-                                       boolean allowGithubWebHookPermission,
+                                       boolean allowCodingWebHookPermission,
                                        boolean allowCcTrayPermission,
                                        boolean allowAnonymousReadPermission,
                                        boolean allowAnonymousJobStatusPermission) {
@@ -83,7 +83,7 @@ public class CodingAuthorizationStrategy extends AuthorizationStrategy {
                 authenticatedUserReadPermission,
                 useRepositoryPermissions,
                 authenticatedUserCreateJobPermission,
-                allowGithubWebHookPermission,
+                allowCodingWebHookPermission,
                 allowCcTrayPermission,
                 allowAnonymousReadPermission,
                 allowAnonymousJobStatusPermission);
@@ -106,8 +106,8 @@ public class CodingAuthorizationStrategy extends AuthorizationStrategy {
     public ACL getACL(@Nonnull AbstractItem item) {
         // skip repository right now
 //        if(item instanceof MultiBranchProject) {
-//            CodingRequireOrganizationMembershipACL githubACL = (CodingRequireOrganizationMembershipACL) getRootACL();
-//            return githubACL.cloneForProject(item);
+//            CodingRequireOrganizationMembershipACL codingACL = (CodingRequireOrganizationMembershipACL) getRootACL();
+//            return codingACL.cloneForProject(item);
 //        } else {
             return getRootACL();
 //        }
@@ -116,8 +116,8 @@ public class CodingAuthorizationStrategy extends AuthorizationStrategy {
     @Nonnull
     public ACL getACL(@Nonnull Job<?,?> job) {
 //        if(job instanceof WorkflowJob && job.getProperty(BranchJobProperty.class) != null || job instanceof AbstractProject) {
-//            CodingRequireOrganizationMembershipACL githubACL = (CodingRequireOrganizationMembershipACL) getRootACL();
-//            return githubACL.cloneForProject(job);
+//            CodingRequireOrganizationMembershipACL codingACL = (CodingRequireOrganizationMembershipACL) getRootACL();
+//            return codingACL.cloneForProject(job);
 //        } else {
             return getRootACL();
 //        }
@@ -179,11 +179,11 @@ public class CodingAuthorizationStrategy extends AuthorizationStrategy {
     }
 
     /**
-     * @return isAllowGithubWebHookPermission
-     * @see CodingRequireOrganizationMembershipACL#isAllowGithubWebHookPermission()
+     * @return isAllowCodingWebHookPermission
+     * @see CodingRequireOrganizationMembershipACL#isAllowCodingWebHookPermission()
      */
-    public boolean isAllowGithubWebHookPermission() {
-        return rootACL.isAllowGithubWebHookPermission();
+    public boolean isAllowCodingWebHookPermission() {
+        return rootACL.isAllowCodingWebHookPermission();
     }
 
     /**
@@ -225,7 +225,7 @@ public class CodingAuthorizationStrategy extends AuthorizationStrategy {
                 this.isUseRepositoryPermissions() == obj.isUseRepositoryPermissions() &&
                 this.isAuthenticatedUserCreateJobPermission() == obj.isAuthenticatedUserCreateJobPermission() &&
                 this.isAuthenticatedUserReadPermission() == obj.isAuthenticatedUserReadPermission() &&
-                this.isAllowGithubWebHookPermission() == obj.isAllowGithubWebHookPermission() &&
+                this.isAllowCodingWebHookPermission() == obj.isAllowCodingWebHookPermission() &&
                 this.isAllowCcTrayPermission() == obj.isAllowCcTrayPermission() &&
                 this.isAllowAnonymousReadPermission() == obj.isAllowAnonymousReadPermission() &&
                 this.isAllowAnonymousJobStatusPermission() == obj.isAllowAnonymousJobStatusPermission();
@@ -244,7 +244,7 @@ public class CodingAuthorizationStrategy extends AuthorizationStrategy {
             Descriptor<AuthorizationStrategy> {
 
         public String getDisplayName() {
-            return "GitHub Committer Authorization Strategy";
+            return Messages.coding_oauth_codingAuthorizationStrategy();
         }
 
         public String getHelpFile() {

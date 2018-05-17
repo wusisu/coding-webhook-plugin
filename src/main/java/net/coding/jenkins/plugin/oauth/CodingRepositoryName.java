@@ -49,12 +49,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Uniquely identifies a repository on GitHub.
+ * Uniquely identifies a repository on Coding.
  *
  * This is a simplified version of the file
  * https://github.com/jenkinsci/github-plugin/blob/master/src/main/java/com/cloudbees/jenkins/GitHubRepositoryName.java
  *
- * It has been duplicated to avoid introducing a dependency on "github-plugin"
+ * It has been duplicated to avoid introducing a dependency on "coding-plugin"
  *
  * @author Kohsuke Kawaguchi
  */
@@ -118,7 +118,7 @@ public class CodingRepositoryName {
 
     @Override
     public String toString() {
-        return "GitHubRepository[host="+host+",username="+userName+",repository="+repositoryName+"]";
+        return "CodingRepository[host="+host+",username="+userName+",repository="+repositoryName+"]";
     }
 
     private static final Logger LOGGER = Logger.getLogger(CodingRepositoryName.class.getName());

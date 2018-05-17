@@ -52,7 +52,7 @@ public class CodingSecretStorage {
         try {
             user.addProperty(new CodingAccessTokenProperty(accessToken));
         } catch (IOException e) {
-            Log.warn("Received an exception when trying to add the GitHub access token to the user: " + user.getId(), e);
+            Log.warn("Received an exception when trying to add the Coding access token to the user: " + user.getId(), e);
         }
     }
 }

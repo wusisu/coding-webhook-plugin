@@ -34,11 +34,11 @@ import org.kohsuke.accmod.restrictions.NoExternalUse;
 public class CodingLogoutAction implements UnprotectedRootAction {
 
     /** The URL of the action. */
-    static final String POST_LOGOUT_URL = "githubLogout";
+    static final String POST_LOGOUT_URL = "codingLogout";
 
     @Override
     public String getDisplayName() {
-        return "Github Logout";
+        return "Coding Logout";
     }
 
     @Override
@@ -53,26 +53,26 @@ public class CodingLogoutAction implements UnprotectedRootAction {
     }
 
     @Restricted(NoExternalUse.class) // jelly only
-    public String getGitHubURL() {
+    public String getCodingURL() {
         Jenkins j = Jenkins.getInstance();
         assert j != null;
         SecurityRealm r = j.getSecurityRealm();
         if (r instanceof CodingSecurityRealm) {
             CodingSecurityRealm ghsr = (CodingSecurityRealm) r;
-            return ghsr.getGithubWebUri();
+            return ghsr.getCodingWebUri();
         }
         // only called from the Jelly if the CodingSecurityRealm is set...
         return "";
     }
 
     @Restricted(NoExternalUse.class) // jelly only
-    public String getGitHubText() {
+    public String getCodingText() {
         Jenkins j = Jenkins.getInstance();
         assert j != null;
         SecurityRealm r = j.getSecurityRealm();
         if (r instanceof CodingSecurityRealm) {
             CodingSecurityRealm ghsr = (CodingSecurityRealm) r;
-            return (ghsr.getDescriptor().getDefaultGithubWebUri().equals(ghsr.getGithubWebUri()))? "GitHub" : "GitHub Enterprise";
+            return (ghsr.getDescriptor().getDefaultCodingWebUri().equals(ghsr.getCodingWebUri()))? "Coding" : "Coding Enterprise";
         }
         // only called from the Jelly if the CodingSecurityRealm is set...
         return "";

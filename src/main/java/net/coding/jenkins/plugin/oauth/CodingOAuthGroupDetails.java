@@ -38,7 +38,7 @@ public class CodingOAuthGroupDetails extends GroupDetails {
 
     /**
     * Group based on organization name
-    * @param org the github organization
+    * @param org the coding organization
     */
     public CodingOAuthGroupDetails(CodingOrganization org) {
         super();
@@ -48,7 +48,7 @@ public class CodingOAuthGroupDetails extends GroupDetails {
 
     /**
     * Group based on team name
-     * @param team the github team
+     * @param team the coding team
      */
     public CodingOAuthGroupDetails(CodingTeam team) {
         super();

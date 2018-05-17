@@ -28,7 +28,7 @@
     <l:main-panel>
       <j:choose>
         <j:when test="${h.isAnonymous()}">
-          <p>${%coding.oauth.logoutSucceed}<a href="${it.gitHubURL}">${it.gitHubText}</a>.</p>
+          <p>${%coding.oauth.logoutSucceed}<a href="${it.codingURL}">${it.codingText}</a>.</p>
           <p>${%coding.oauth.niceDay}</p>
         </j:when>
         <j:otherwise>

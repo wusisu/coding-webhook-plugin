@@ -88,7 +88,7 @@ import java.util.logging.Logger;
 /**
  * @author mocleiri
  *
- *         to hold the authentication token from the github oauth process.
+ *         to hold the authentication token from the coding oauth process.
  *
  */
 public class CodingAuthenticationToken extends AbstractAuthenticationToken {
@@ -96,7 +96,7 @@ public class CodingAuthenticationToken extends AbstractAuthenticationToken {
     private static final long serialVersionUID = 2L;
 
     private final String accessToken;
-    private final String githubServer;
+    private final String codingServer;
     private final String userName;
 
     private transient Coding coding;
@@ -113,10 +113,10 @@ public class CodingAuthenticationToken extends AbstractAuthenticationToken {
     private static final Cache<String, Set<String>> repositoriesByUserCache =
             CacheBuilder.newBuilder().expireAfterWrite(1, CACHE_EXPIRY).build();
 
-    private static final Cache<String, GithubUser> usersByIdCache =
+    private static final Cache<String, WrappedCodingUser> usersByIdCache =
             CacheBuilder.newBuilder().expireAfterWrite(1, CACHE_EXPIRY).build();
 
-    private static final Cache<String, GithubMyself> usersByTokenCache =
+    private static final Cache<String, WrappedCodingMyself> usersByTokenCache =
             CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.MINUTES).build();
 
     private static final Cache<String, Map<String, Set<CodingTeam>>> userTeamsCache =
@@ -138,22 +138,22 @@ public class CodingAuthenticationToken extends AbstractAuthenticationToken {
 
     private final List<GrantedAuthority> authorities = new ArrayList<>();
 
-    private static final GithubUser UNKNOWN_USER = new GithubUser(null);
-    private static final GithubMyself UNKNOWN_TOKEN = new GithubMyself(null);
+    private static final WrappedCodingUser UNKNOWN_USER = new WrappedCodingUser(null);
+    private static final WrappedCodingMyself UNKNOWN_TOKEN = new WrappedCodingMyself(null);
 
     /** Wrappers for cache **/
-    static class GithubUser {
+    static class WrappedCodingUser {
         public final CodingUser user;
 
-        public GithubUser(CodingUser user) {
+        public WrappedCodingUser(CodingUser user) {
             this.user = user;
         }
     }
 
-    static class GithubMyself {
+    static class WrappedCodingMyself {
         public final CodingMyself me;
 
-        public GithubMyself(CodingMyself me) {
+        public WrappedCodingMyself(CodingMyself me) {
             this.me = me;
         }
     }
@@ -197,11 +197,11 @@ public class CodingAuthenticationToken extends AbstractAuthenticationToken {
         }
     }
 
-    public CodingAuthenticationToken(final String accessToken, final String githubServer) throws IOException {
+    public CodingAuthenticationToken(final String accessToken, final String codingServer) throws IOException {
         super(new GrantedAuthority[] {});
 
         this.accessToken = accessToken;
-        this.githubServer = githubServer;
+        this.codingServer = codingServer;
 
         this.me = loadMyself(accessToken);
 
@@ -230,14 +230,14 @@ public class CodingAuthenticationToken extends AbstractAuthenticationToken {
                     Set<String> myOrgs = userOrganizationCache.get(getName(), new Callable<Set<String>>() {
                         @Override
                         public Set<String> call() throws Exception {
-                            return getGitHub().getMyOrganizations().keySet();
+                            return getCoding().getMyOrganizations().keySet();
                         }
                     });
 
                     Map<String, Set<CodingTeam>> myTeams = userTeamsCache.get(getName(), new Callable<Map<String, Set<CodingTeam>>>() {
                         @Override
                         public Map<String, Set<CodingTeam>> call() throws Exception {
-                            return getGitHub().getMyTeams();
+                            return getCoding().getMyTeams();
                         }
                     });
 
@@ -286,27 +286,27 @@ public class CodingAuthenticationToken extends AbstractAuthenticationToken {
     }
 
     /**
-     * Gets the Github server used for this token
-     * @return githubServer
+     * Gets the Coding server used for this token
+     * @return codingServer
      */
-    public String getGithubServer() {
-        return githubServer;
+    public String getCodingServer() {
+        return codingServer;
     }
 
-    public Coding getGitHub() throws IOException {
+    public Coding getCoding() throws IOException {
         if (this.coding == null) {
 
             String host;
             try {
-                host = new URL(this.githubServer).getHost();
+                host = new URL(this.codingServer).getHost();
             } catch (MalformedURLException e) {
-                throw new IOException("Invalid GitHub API URL: " + this.githubServer, e);
+                throw new IOException("Invalid Coding API URL: " + this.codingServer, e);
             }
 
             OkHttpClient client = new OkHttpClient().setProxy(getProxy(host));
 
             this.coding = CodingBuilder.fromEnvironment()
-                    .withEndpoint(this.githubServer)
+                    .withEndpoint(this.codingServer)
                     .withOAuthToken(this.accessToken)
 //                    .withRateLimitHandler(RateLimitHandler.FAIL)
                     .withConnector(new OkHttpConnector(new OkUrlFactory(client)))
@@ -318,7 +318,7 @@ public class CodingAuthenticationToken extends AbstractAuthenticationToken {
     /**
      * Uses proxy if configured on pluginManager/advanced page
      *
-     * @param host GitHub's hostname to build proxy to
+     * @param host Coding's hostname to build proxy to
      *
      * @return proxy to use it in connector. Should not be null as it can lead to unexpected behaviour
      */
@@ -343,7 +343,7 @@ public class CodingAuthenticationToken extends AbstractAuthenticationToken {
     }
 
     /**
-     * Returns the login name in GitHub.
+     * Returns the login name in Coding.
      * @return principal
      */
     public String getPrincipal() {
@@ -356,13 +356,13 @@ public class CodingAuthenticationToken extends AbstractAuthenticationToken {
      */
     public CodingMyself getMyself() throws IOException {
         if (me == null) {
-            me = getGitHub().getMyself();
+            me = getCoding().getMyself();
         }
         return me;
     }
 
     /**
-     * For some reason I can't get the github api to tell me for the current
+     * For some reason I can't get the coding api to tell me for the current
      * user the groups to which he belongs.
      *
      * So this is a slightly larger consideration. If the authenticated user is
@@ -380,7 +380,7 @@ public class CodingAuthenticationToken extends AbstractAuthenticationToken {
             Set<String> v = userOrganizationCache.get(candidateName,new Callable<Set<String>>() {
                 @Override
                 public Set<String> call() throws Exception {
-                    return getGitHub().getMyOrganizations().keySet();
+                    return getCoding().getMyOrganizations().keySet();
                 }
             });
 
@@ -398,7 +398,7 @@ public class CodingAuthenticationToken extends AbstractAuthenticationToken {
           return true;
         }
         // This is not my repository, nor is it a repository of an organization I belong to.
-        // Check what rights I have on the github repo.
+        // Check what rights I have on the coding repo.
         RepoRights repository = loadRepository(repositoryName);
         if (repository == null) {
           return false;
@@ -463,12 +463,12 @@ public class CodingAuthenticationToken extends AbstractAuthenticationToken {
             .getLogger(CodingAuthenticationToken.class.getName());
 
     public CodingUser loadUser(String username) throws IOException {
-        GithubUser user;
+        WrappedCodingUser user;
         try {
             user = usersByIdCache.getIfPresent(username);
             if (coding != null && user == null && isAuthenticated()) {
-                CodingUser ghUser = getGitHub().getUser(username);
-                user = new GithubUser(ghUser);
+                CodingUser ghUser = getCoding().getUser(username);
+                user = new WrappedCodingUser(ghUser);
                 usersByIdCache.put(username, user);
             }
         } catch (IOException e) {
@@ -480,12 +480,12 @@ public class CodingAuthenticationToken extends AbstractAuthenticationToken {
     }
 
     public CodingMyself loadMyself(String token) throws IOException {
-        GithubMyself me;
+        WrappedCodingMyself me;
         try {
             me = usersByTokenCache.getIfPresent(token);
             if (me == null) {
-                CodingMyself ghMyself = getGitHub().getMyself();
-                me = new GithubMyself(ghMyself);
+                CodingMyself ghMyself = getCoding().getMyself();
+                me = new WrappedCodingMyself(ghMyself);
                 usersByTokenCache.put(token, me);
             }
         } catch (IOException e) {
@@ -499,7 +499,7 @@ public class CodingAuthenticationToken extends AbstractAuthenticationToken {
     public CodingOrganization loadOrganization(String organization) {
         try {
             if (coding != null && isAuthenticated())
-//                return getGitHub().getOrganization(organization);
+//                return getCoding().getOrganization(organization);
                 throw new UnsupportedOperationException("");
             throw new IOException();
         } catch (IOException | RuntimeException e) {
@@ -516,7 +516,7 @@ public class CodingAuthenticationToken extends AbstractAuthenticationToken {
                       @Override
                       public RepoRights call() throws Exception {
                           throw new UnsupportedOperationException("");
-//                          CodingRepository repo = getGitHub().getRepository(repositoryName);
+//                          CodingRepository repo = getCoding().getRepository(repositoryName);
 //                          return new RepoRights(repo);
                       }
                   }
@@ -525,7 +525,7 @@ public class CodingAuthenticationToken extends AbstractAuthenticationToken {
       } catch (Exception e) {
           LOGGER.log(Level.SEVERE, "an exception was thrown", e);
           LOGGER.log(Level.WARNING,
-              "Looks like a bad GitHub URL OR the Jenkins user {0} does not have access to the repository {1}. May need to add 'repo' or 'public_repo' to the list of oauth scopes requested.",
+              "Looks like a bad Coding URL OR the Jenkins user {0} does not have access to the repository {1}. May need to add 'repo' or 'public_repo' to the list of oauth scopes requested.",
               new Object[] { this.userName, repositoryName });
       }
       return null;
