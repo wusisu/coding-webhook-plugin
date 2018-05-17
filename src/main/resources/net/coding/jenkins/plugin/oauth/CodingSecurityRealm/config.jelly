@@ -8,9 +8,11 @@
             <f:textbox default="${descriptor.getDefaultCodingWebUri()}" />
         </f:entry>
 
-        <f:entry title="${%coding.oauth.codingApiUri}"  field="codingApiUri" help="/plugin/coding-webhook/help/oauth/realm/coding-api-uri-help.html">
-            <f:textbox default="${descriptor.getDefaultCodingApiUri()}" />
-        </f:entry>
+        <!--
+            <f:entry title="${%coding.oauth.codingApiUri}"  field="codingApiUri" help="/plugin/coding-webhook/help/oauth/realm/coding-api-uri-help.html">
+                <f:textbox default="${descriptor.getDefaultCodingApiUri()}" />
+            </f:entry>
+        -->
 
         <f:entry title="${%coding.oauth.clientID}"  field="clientID" help="/plugin/coding-webhook/help/oauth/realm/client-id-help.html">
             <f:textbox />

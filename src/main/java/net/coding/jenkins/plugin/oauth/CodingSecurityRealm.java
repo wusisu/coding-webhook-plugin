@@ -229,7 +229,8 @@ public class CodingSecurityRealm extends AbstractPasswordBasedSecurityRealm impl
      * @return the URI to the API root of Coding or Coding Enterprise.
      */
     public String getCodingApiUri() {
-        return codingApiUri;
+        return codingWebUri;
+//        return codingApiUri;
     }
 
     /**

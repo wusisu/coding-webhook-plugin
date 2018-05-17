@@ -357,11 +357,14 @@ public class CodingRequireOrganizationMembershipACL extends ACL {
 
         this.organizationNameList = new LinkedList<String>();
 
-        parts = organizationNames.split(",");
+        if (organizationNames != null) {
+            parts = organizationNames.split(",");
 
-        for (String part : parts) {
-            organizationNameList.add(part.trim());
+            for (String part : parts) {
+                organizationNameList.add(part.trim());
+            }
         }
+
 
         this.item = null;
     }
